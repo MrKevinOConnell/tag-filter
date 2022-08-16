@@ -16,11 +16,11 @@ const tagToColor = (tag: Tag) => {
   }
 };
 
-const HoldersTableTable = function HoldersTableTable(props: { data: Data[], onClickTag: (tag: Tag) => void, onClickSort: (isSorted: boolean) => void }) {
+const HoldersTableTable = function HoldersTableTable(props: { data: Data[], onTagsClick: () => void, onClickSort: (isSorted: boolean) => void }) {
   const tableStdPadding = " pl-2 pr-1 sm:pl-3 ";
   const [isSorted,setIsSorted] = useState(false)
-  const handleClickTag = (tag) => {
-    props.onClickTag  && props.onClickTag(tag)
+  const handleTagsClick = () => {
+    props.onTagsClick  && props.onTagsClick()
   }
   const handleSortClick = () => {
     props.onClickSort && props.onClickSort(!isSorted)
@@ -41,7 +41,8 @@ const HoldersTableTable = function HoldersTableTable(props: { data: Data[], onCl
           </th>
           <th
             scope="col"
-            className={`py-2 pl-2 pr-1  text-sm font-semibold text-gray-900 lg:min-w-[130px] text-left `}
+            className={`py-2 pl-2 pr-1  text-sm font-semibold text-gray-900 lg:min-w-[130px] text-left  hover:bg-gray-200 cursor-pointer`}
+            onClick={()=> handleTagsClick()}
           >
             Tags
           </th>
@@ -79,9 +80,6 @@ const HoldersTableTable = function HoldersTableTable(props: { data: Data[], onCl
                         tag
                       )}`}
                       key={idx}
-                      onClick={() => {
-                        handleClickTag(tag)
-                      }}
                     >
                       {tag}
                     </div>

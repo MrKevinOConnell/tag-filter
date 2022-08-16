@@ -1,18 +1,17 @@
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
-import CustomMenu from "../components/CustomMenu";
+import CustomDialog from "../components/Dialog";
 import Table from "../components/Table";
 import data, { Data, Tag } from "../src/data";
 
 const Home: NextPage = () => {
   const [filterTags, setFilterTags] = useState<Tag[]>([]);
   const [currentData, setCurrentData] = useState(data)
-
+  const [showMenu, setShowMenu] = useState(false)
 
 useEffect(() => {
  applyFilters()
 },[filterTags])
-
 
 const removeFilter = (filter: Tag) => {
 setFilterTags(filterTags.filter((f) => f !== filter))
@@ -24,10 +23,8 @@ const applyFilters = () => {
     setCurrentData(filteredData)
   }
 
-const onClickTag = (filter: Tag) => {
-  if(!filterTags.includes(filter)) {
-  setFilterTags([...filterTags,filter])
-  }
+const onClickTags = () => {
+  setShowMenu(true)
   }
 
 const onSortChange = (isSorted: boolean) => {
@@ -82,7 +79,8 @@ const onSortChange = (isSorted: boolean) => {
           <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                <Table data={currentData} onClickTag={(tag) => onClickTag(tag)} onClickSort={(isSorted) => {
+              <CustomDialog isOpen={showMenu} onApply={(tags) => setFilterTags(tags)} onClose={() => setShowMenu(false)} />
+              <Table data={currentData} onTagsClick={() => setShowMenu(true)} onClickSort={(isSorted) => {
                   onSortChange(isSorted)
                 }}></Table>
               </div>
