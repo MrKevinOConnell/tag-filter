@@ -7,22 +7,19 @@ const CustomDialog = function HoldersTableTable(props: { onApply:(filters: Tag[]
     if(!filterTags.includes(filter)) {
     setFilterTags([...filterTags,filter])
     }
+    else {
+      setFilterTags(filterTags.filter(tag => tag !== filter))
+    }
   }
   const handleOnClose = () => {
-       setFilterTags([]) 
-        props.onClose() 
+        setFilterTags([])
+        props.onClose && props.onClose() 
       }  
 
       const handleOnApply = () => {
-        
         props.onApply && props.onApply(filterTags)
-        setFilterTags([]) 
-        props.onClose && props.onClose()
+        handleOnClose()
        }  
-     
-    
-
-
   return (
     <Transition appear show={props.isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => handleOnClose()}>
