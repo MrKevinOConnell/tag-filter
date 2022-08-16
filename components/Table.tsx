@@ -16,9 +16,8 @@ const tagToColor = (tag: Tag) => {
   }
 };
 
-const HoldersTableTable = function HoldersTableTable(props: { data: Data[] }) {
+const HoldersTableTable = function HoldersTableTable(props: { data: Data[], onClickTag: (tag: Tag) => void }) {
   const tableStdPadding = " pl-2 pr-1 sm:pl-3 ";
-
   return (
     <table className="min-w-full divide-y divide-gray-300">
       <thead className="bg-gray-50">
@@ -31,11 +30,7 @@ const HoldersTableTable = function HoldersTableTable(props: { data: Data[] }) {
           </th>
           <th
             scope="col"
-            className={`py-2 pl-2 pr-1  text-sm font-semibold text-gray-900 lg:min-w-[130px] text-left hover:bg-gray-200 cursor-pointer`}
-            onClick={() => {
-              // TODO
-              // Add a dropdown here that let's the user select a tag to filter by
-            }}
+            className={`py-2 pl-2 pr-1  text-sm font-semibold text-gray-900 lg:min-w-[130px] text-left `}
           >
             Tags
           </th>
@@ -73,6 +68,9 @@ const HoldersTableTable = function HoldersTableTable(props: { data: Data[] }) {
                         tag
                       )}`}
                       key={idx}
+                      onClick={() => {
+                        props.onClickTag  && props.onClickTag(tag)
+                      }}
                     >
                       {tag}
                     </div>
