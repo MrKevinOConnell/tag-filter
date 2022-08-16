@@ -2,27 +2,52 @@ import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import CustomMenu from "../components/CustomMenu";
 import Table from "../components/Table";
-import data, { Tag } from "../src/data";
+import data, { Data, Tag } from "../src/data";
 
 const Home: NextPage = () => {
-  const [filterTag, setFilterTag] = useState<Tag[]>([]);
+  const [filterTags, setFilterTags] = useState<Tag[]>([]);
   const [currentData, setCurrentData] = useState(data)
 
+
 useEffect(() => {
-  const filter = data.filter(item => { return (
-    filterTag.length ?  filterTag.every(filter => item.tags.includes(filter)) : true )})
-    setCurrentData(filter)
-},[filterTag])
+ applyFilters()
+},[filterTags])
+
 
 const removeFilter = (filter: Tag) => {
-setFilterTag(filterTag.filter((f) => f !== filter))
+setFilterTags(filterTags.filter((f) => f !== filter))
 }
 
+const applyFilters = () => {
+  const filteredData = data.filter(item => { return (
+    filterTags.length ?  filterTags.every(filter => item.tags.includes(filter)) : true )})
+    setCurrentData(filteredData)
+  }
+
 const onClickTag = (filter: Tag) => {
-  if(!filterTag.includes(filter)) {
-  setFilterTag([...filterTag,filter])
+  if(!filterTags.includes(filter)) {
+  setFilterTags([...filterTags,filter])
   }
   }
+
+const onSortChange = (isSorted: boolean) => {
+  if(isSorted) {
+    const data = currentData.sort((a,b) => {
+      if (a.title < b.title) {
+        return -1
+      }
+      if (a.title > b.title) {
+        return 1
+      }
+      return 0
+    })
+    console.log("DATA",data)
+    setCurrentData(data)
+  }
+  else {
+    applyFilters()
+  }
+    }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
@@ -39,7 +64,7 @@ const onClickTag = (filter: Tag) => {
 
             {/* Only show selected Tag below! */}
             <div className="flex mt-8">
-            { filterTag && filterTag.map(filter => {return (
+            { filterTags && filterTags.map(filter => {return (
 
  <div
    className={`mr-1  text-black rounded-lg my-0.5 py-1 px-2 border border-gray-400`}
@@ -57,7 +82,9 @@ const onClickTag = (filter: Tag) => {
           <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                <Table data={currentData} onClickTag={(tag) => onClickTag(tag)}></Table>
+                <Table data={currentData} onClickTag={(tag) => onClickTag(tag)} onClickSort={(isSorted) => {
+                  onSortChange(isSorted)
+                }}></Table>
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { NextRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { Data, Tag } from "../src/data";
 
 const tagToColor = (tag: Tag) => {
@@ -16,17 +16,28 @@ const tagToColor = (tag: Tag) => {
   }
 };
 
-const HoldersTableTable = function HoldersTableTable(props: { data: Data[], onClickTag: (tag: Tag) => void }) {
+const HoldersTableTable = function HoldersTableTable(props: { data: Data[], onClickTag: (tag: Tag) => void, onClickSort: (isSorted: boolean) => void }) {
   const tableStdPadding = " pl-2 pr-1 sm:pl-3 ";
+  const [isSorted,setIsSorted] = useState(false)
+  const handleClickTag = (tag) => {
+    props.onClickTag  && props.onClickTag(tag)
+  }
+  const handleSortClick = () => {
+    props.onClickSort && props.onClickSort(!isSorted)
+    setIsSorted(!isSorted)
+  }
   return (
     <table className="min-w-full divide-y divide-gray-300">
       <thead className="bg-gray-50">
         <tr>
           <th
             scope="col"
-            className={`py-2 pl-2 pr-1  text-sm font-semibold text-gray-900 lg:min-w-[130px] text-left`}
+            className={`py-2 pl-2 pr-1  text-sm font-semibold text-gray-900 lg:min-w-[130px] text-left hover:bg-gray-200 cursor-pointer` }
+            onClick={() =>  {
+              handleSortClick()
+            }}
           >
-            Title
+           <p> Title {isSorted &&  "(In alphabetical order)"} </p>
           </th>
           <th
             scope="col"
@@ -69,7 +80,7 @@ const HoldersTableTable = function HoldersTableTable(props: { data: Data[], onCl
                       )}`}
                       key={idx}
                       onClick={() => {
-                        props.onClickTag  && props.onClickTag(tag)
+                        handleClickTag(tag)
                       }}
                     >
                       {tag}
